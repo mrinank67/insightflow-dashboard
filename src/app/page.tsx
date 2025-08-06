@@ -1,3 +1,5 @@
+"use client"
+
 import {
   Activity,
   BarChart,
@@ -29,46 +31,56 @@ import { UsersChart } from '@/components/dashboard/users-chart';
 import { DataTable } from '@/components/dashboard/data-table';
 import { payments, revenueData, usersData } from '@/lib/data';
 import { ConversionsChart } from '@/components/dashboard/conversions-chart';
+import type { Payment } from '@/lib/types';
 
-async function getData() {
-  // Simulate a network delay
-  await new Promise(resolve => setTimeout(resolve, 1500));
+const cards = [
+  {
+    title: 'Total Revenue',
+    icon: DollarSign,
+    value: '$45,231.89',
+    change: '+20.1% from last month',
+  },
+  {
+    title: 'Subscriptions',
+    icon: Users,
+    value: '+2350',
+    change: '+180.1% from last month',
+  },
+  {
+    title: 'Conversions',
+    icon: BarChart,
+    value: '+12,234',
+    change: '+19% from last month',
+  },
+  {
+    title: 'Active Now',
+    icon: Activity,
+    value: '+573',
+    change: '+201 since last hour',
+  },
+]
 
-  return {
-    payments,
-    revenueData,
-    usersData,
-    cards: [
-      {
-        title: 'Total Revenue',
-        icon: DollarSign,
-        value: '$45,231.89',
-        change: '+20.1% from last month',
-      },
-      {
-        title: 'Subscriptions',
-        icon: Users,
-        value: '+2350',
-        change: '+180.1% from last month',
-      },
-      {
-        title: 'Conversions',
-        icon: BarChart,
-        value: '+12,234',
-        change: '+19% from last month',
-      },
-      {
-        title: 'Active Now',
-        icon: Activity,
-        value: '+573',
-        change: '+201 since last hour',
-      },
-    ]
-  };
+function downloadCSV(data: Payment[], filename: string) {
+  const csvHeader = "ID,Amount,Status,Email,Date\n";
+  const csvRows = data.map(p => [p.id, p.amount, p.status, p.email, p.date].join(',')).join('\n');
+  const csvContent = csvHeader + csvRows;
+
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.setAttribute('href', url);
+  link.setAttribute('download', filename);
+  link.style.visibility = 'hidden';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 }
 
-export default async function DashboardPage() {
-  const data = await getData();
+
+export default function DashboardPage() {
+  const handleExport = () => {
+    downloadCSV(payments, 'transactions.csv');
+  };
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -96,7 +108,7 @@ export default async function DashboardPage() {
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="sm:max-w-xs">
-              <SheetTitle className="sr-only">Menu</SheetTitle>
+              <SheetTitle>Menu</SheetTitle>
               <nav className="grid gap-6 text-lg font-medium">
                 <h1 className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base">
                   <LayoutDashboard className="h-5 w-5 transition-all group-hover:scale-110" />
@@ -117,7 +129,7 @@ export default async function DashboardPage() {
           </div>
           <div className='flex items-center gap-2'>
             <DateRangePicker />
-            <Button size="sm" variant="outline" className="h-9 gap-1">
+            <Button size="sm" variant="outline" className="h-9 gap-1" onClick={handleExport}>
               <File className="h-3.5 w-3.5" />
               <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
                 Export
@@ -127,25 +139,25 @@ export default async function DashboardPage() {
           </div>
         </header>
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
-          <OverviewCards data={data.cards}/>
+          <OverviewCards data={cards}/>
           <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-5">
             <Card className="xl:col-span-3">
               <CardHeader>
                 <CardTitle>Revenue Overview</CardTitle>
               </CardHeader>
               <CardContent>
-                <RevenueChart data={data.revenueData} />
+                <RevenueChart data={revenueData} />
               </CardContent>
             </Card>
             <Card className="xl:col-span-2">
               <CardHeader>
                 <CardTitle>New Users</CardTitle>
                 <CardDescription>
-                  You gained {data.usersData.reduce((acc, item) => acc + item.newUsers, 0)} new users this year.
+                  You gained {usersData.reduce((acc, item) => acc + item.newUsers, 0)} new users this year.
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <UsersChart data={data.usersData} />
+                <UsersChart data={usersData} />
               </CardContent>
             </Card>
           </div>
@@ -158,7 +170,7 @@ export default async function DashboardPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <DataTable data={data.payments} />
+                <DataTable data={payments} />
               </CardContent>
             </Card>
             </div>
