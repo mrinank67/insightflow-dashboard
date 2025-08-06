@@ -30,7 +30,7 @@ export function DateRangePicker({
             id="date"
             variant={"outline"}
             className={cn(
-              "w-[300px] justify-start text-left font-normal",
+              "w-full justify-start text-left font-normal md:w-[300px]",
               !date && "text-muted-foreground"
             )}
           >
@@ -38,8 +38,13 @@ export function DateRangePicker({
             {date?.from ? (
               date.to ? (
                 <>
-                  {format(date.from, "LLL dd, y")} -{" "}
-                  {format(date.to, "LLL dd, y")}
+                  <span className="hidden sm:inline">
+                    {format(date.from, "LLL dd, y")} -{" "}
+                    {format(date.to, "LLL dd, y")}
+                  </span>
+                  <span className="sm:hidden">
+                    {format(date.from, "MM/dd")} - {format(date.to, "MM/dd")}
+                  </span>
                 </>
               ) : (
                 format(date.from, "LLL dd, y")

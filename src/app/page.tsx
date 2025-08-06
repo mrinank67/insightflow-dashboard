@@ -18,6 +18,7 @@ import {
 import {
   Sheet,
   SheetContent,
+  SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { ThemeToggle } from '@/components/theme-toggle';
@@ -95,6 +96,7 @@ export default async function DashboardPage() {
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="sm:max-w-xs">
+              <SheetTitle className="sr-only">Menu</SheetTitle>
               <nav className="grid gap-6 text-lg font-medium">
                 <h1 className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base">
                   <LayoutDashboard className="h-5 w-5 transition-all group-hover:scale-110" />
@@ -147,8 +149,8 @@ export default async function DashboardPage() {
               </CardContent>
             </Card>
           </div>
-           <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-5">
-            <Card className="xl:col-span-3">
+           <div className="grid gap-4 md:gap-8 lg:grid-cols-1">
+            <Card>
               <CardHeader>
                 <CardTitle>Recent Transactions</CardTitle>
                 <CardDescription>
@@ -159,7 +161,9 @@ export default async function DashboardPage() {
                 <DataTable data={data.payments} />
               </CardContent>
             </Card>
-            <Card className="xl:col-span-2">
+            </div>
+            <div className="grid gap-4 md:gap-8 lg:grid-cols-1">
+            <Card>
               <CardHeader>
                 <CardTitle>Conversion Sources</CardTitle>
                 <CardDescription>
