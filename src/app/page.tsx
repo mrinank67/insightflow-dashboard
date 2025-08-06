@@ -126,8 +126,8 @@ export default async function DashboardPage() {
         </header>
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
           <OverviewCards data={data.cards}/>
-          <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
-            <Card className="xl:col-span-2">
+          <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-5">
+            <Card className="xl:col-span-3">
               <CardHeader>
                 <CardTitle>Revenue Overview</CardTitle>
               </CardHeader>
@@ -135,7 +135,7 @@ export default async function DashboardPage() {
                 <RevenueChart data={data.revenueData} />
               </CardContent>
             </Card>
-            <Card>
+            <Card className="xl:col-span-2">
               <CardHeader>
                 <CardTitle>New Users</CardTitle>
                 <CardDescription>
@@ -147,8 +147,8 @@ export default async function DashboardPage() {
               </CardContent>
             </Card>
           </div>
-           <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
-            <Card className="xl:col-span-2">
+           <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-5">
+            <Card className="xl:col-span-3">
               <CardHeader>
                 <CardTitle>Recent Transactions</CardTitle>
                 <CardDescription>
@@ -159,7 +159,7 @@ export default async function DashboardPage() {
                 <DataTable data={data.payments} />
               </CardContent>
             </Card>
-            <Card>
+            <Card className="xl:col-span-2">
               <CardHeader>
                 <CardTitle>Conversion Sources</CardTitle>
                 <CardDescription>
